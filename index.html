@@ -1,0 +1,342 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            .mainContenter{
+                display: flex;
+                        flex-direction: row;
+            }
+            #buy{
+                margin-top: 20px;
+            }
+            html{
+                background-color: pink;
+            }
+            .cardContainer{
+                width: 70%;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: left;
+            }
+            .card{
+                width: 20%;
+                background-color: #fff;
+                
+                border: 1px solid gray;
+                margin: 20px;
+            }
+            .card img{
+                width: 100%;
+            }
+            .more{
+                width: 100%;
+            }
+            #close{
+                margin-left: 90%;
+                margin-bottom: 20px;
+            }
+            .shopcar{
+                width: 28%;
+            }
+            #infoModal{
+            
+                width: 100%;
+                height: auto;
+                z-index: 10;
+
+            }
+            #show{
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding: 20px;
+                width: 100%;
+                height: 200vh;
+                background-color: rgba(0, 0, 0, 0.8);
+            }
+            .showContent{
+                position: absolute;
+                left: 50%;
+                top: 5vh;
+                width: 50%;
+                height: 90vh;
+                transform: translateX(-50%);
+                background-color: #fff;
+                overflow-y: auto;
+                padding: 20px;
+            }
+            .shopImg{
+                width: 150px;
+            }
+            .shopcar-c{
+                display: flex;
+                border: 1px solid gray;
+                margin-bottom: 5px;
+
+            }
+            .shopcar-c > div:last-of-type{
+                margin-left: 10px;
+            }
+            .hoverStyle{
+                cursor: pointer;
+            }
+            footer{
+                margin-top: 50px;
+                padding: auto;
+                text-align: center;
+                background-color: palevioletred;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="app">
+            <h1>租借男友</h1>
+            <hr>
+            查詢男友:<input type="text" v-model="searchInput" >
+            <div class="mainContenter">
+            
+                <section class="cardContainer" id="">
+                    <div v-for="item in filteredList" :key="item.id" class="card">
+        
+                        <img :src="item.img" alt="">
+                        <p>{{item.name}}, {{item.age}} </p>
+                        <p>我的評分:<br>{{item.goal}}</p>    
+                        <button @click="item.showModal = true" class="hoverStyle" @mouseover="handleMouseOver" @mouseout="handleMouseOut">更多關於{{item.name}}❤️</button>
+            
+                        <div id="show" v-if="item.showModal"> 
+                            <div class="showContent">
+                                <img :src="item.img" alt="">
+                                <h3>{{item.name}}, {{item.age}}</h3>
+                                <p>地點: {{item.location}}</p>
+                                <p>我的評分:{{item.goal}}</p>
+                                <p>身高: {{item.height}}</p>
+                                <p>吸煙習慣： {{item.hobby1}}</p>
+                                <p>飲酒習慣：{{item.hobby2}}</p>
+                                <p>零用錢預算：{{item.money}}</p>
+                                <p v-html="item.about"> </p>
+                                <p >租借金額：{{item.cost}}/天</p>
+                                <label for="days" >租借天數：</label>
+                                <select id="days" v-model="item.days" value="list.count">
+                                    <option value="1">1 天</option>
+                                    <option value="2">2 天</option>
+                                    <option value="3">3 天</option>
+                                    <option value="4">4 天</option>
+                                    <option value="5">5 天</option>
+                                    <option value="6">6 天</option>
+                                    <option value="7">7 天</option>
+                                    <option value="8">8 天</option>
+                                    <option value="9">9 天</option>
+                                </select>
+                                <br>
+                                <button id="buy" @click="putIntoShop(item.name,item.age,item.cost,item.days,item.img)" class="hoverStyle" @mouseover="handleMouseOver" @mouseout="handleMouseOut">確定租借</button>  
+                                <button id="close" @click="item.showModal = false" class="hoverStyle" @mouseover="handleMouseOver" @mouseout="handleMouseOut">close</button>
+                            </div>
+                        </div>
+                        
+                            
+            
+                    </div>  
+                    
+                </section>
+                
+                <section class="shopcar">
+                    <h2>我的租借人選</h2>
+                    <div v-for="item in buylist" :key="item.itemName" class="shopcar-c">
+                        <img :src="item.itemSrc" alt="" class="shopImg">    
+                        <div>
+                            <p>訂單{{item.index}}: {{item.itemName}},{{item.itemAge}}</p>
+                            <p>租借天數: {{item.itemDays}}</p>
+                            <p>租借單價:{{item.itemPrice}}</p>
+                        </div>               
+                    </div>
+                    <hr>
+                    <p>租借總金額:{{priceTotle}}</p>
+                </section> 
+            </div>
+           
+            
+            
+        </div>
+
+        <footer>本網站是緯育TibaMe前端工程師班第83期學員Vue作業，全站僅用於學習和展示目的無商業用途，若有任何問題請洽緯育股份有限公司。</footer>
+        <script src="https://unpkg.com/vue@next"></script>
+        <script>  
+            const app = Vue.createApp({
+                data() {
+                    return {
+                        showModal: false,
+                        priceTotle: 0,
+                        searchInput: '',
+                        // newlist:'',
+                        hoverStyle:{
+                            cursor: 'default'
+                        },
+                        buylist:[
+
+                        ],
+                        list: [
+                        {
+                            id:'1',
+                            img: "./img/S0.jpg", 
+                            name: '小偉',
+                            age: '20',
+                            goal: '✨✨✨✨✨',
+                            location: 'Taiwan',
+                            height: '175cm',
+                            hobby1: '不抽煙',
+                            hobby2: '不喝酒',
+                            money: '可商議的',
+                            about: '關於我:<br>大家好，我是小偉，可以叫我偉偉😘<br>目前是學生，js、vue一把罩，希望我們相處得來',
+                            cost:'100',
+                            days:'0'
+                        },
+                            {
+                                id:'2', 
+                                img: "./img/s2.jpg",
+                                name: '嫻嫻',
+                                age: '22',
+                                goal: '✨✨✨✨✨',
+                                location: 'Tainan',
+                                height: '173cm',
+                                hobby1: '社交菸',
+                                hobby2: '喝社交酒',
+                                money: '看你的用心了',
+                                about: '關於我:<br>大家好，54嫻嫻，我很喜歡唱歌🎤<br>當我拿起麥，世界跟我嗨，跟我一起搖擺😘',
+                                cost:'75',
+                                days:'0'
+                        }
+                        ,
+                        {
+                                id:'3', 
+                                img: "./img/S3.jpg",
+                                name: '阿極',
+                                age: '28',
+                                goal: '✨✨✨✨✨',
+                                location: 'Tainan',
+                                height: '178cm',
+                                hobby1: '不抽菸',
+                                hobby2: '喝社交酒',
+                                money: '改車有點貴，你懂得',
+                                about: '關於我:<br>莫忘初衷，大家好，人稱山道阿極就是我🏍️<br>想當年我叱吒山道時，這群猴子還在玩四驅車，<br>歡迎找我，我請你喝咖啡☕',
+                                cost:'120',
+                                days:'0'
+                        },
+                        {
+                                id:'4', 
+                                img: "./img/s40.jpg",
+                                name: 'Daniel 蜓',
+                                age: '31',
+                                goal: '✨✨✨✨✨',
+                                location: 'Taipei',
+                                height: '182cm',
+                                hobby1: '可以為了你抽',
+                                hobby2: '只跟你喝',
+                                money: '錢不是重點，你才是',
+                                about: '關於我:<br>我是專情真誠的男人，Daniel 蜓🤙<br>雖然我有女朋友了<br>不過沒關係，你是特別的💖',
+                                cost:'20',
+                                days:'0'
+                        },
+                        {
+                                id:'5', 
+                                img: "./img/s5.jpg",
+                                name: '義哥',
+                                age: '30',
+                                goal: '✨✨✨✨✨',
+                                location: 'Taichung',
+                                height: '177cm',
+                                hobby1: '社交菸',
+                                hobby2: '只喝高粱',
+                                money: '高',
+                                about: '關於我:<br>不要看我很Man，其實我很溫柔👋<br>不太會介紹自己<br>不過沒關係，相處看看就知道我的好🕺',
+                                cost:'80',
+                                days:'0'
+                        },
+                        {
+                                id:'6', 
+                                img: "./img/s6.jpg",
+                                name: '羞桑',
+                                age: '18',
+                                goal: '✨✨✨✨✨',
+                                location: 'Taichung',
+                                height: '177cm',
+                                hobby1: '保留',
+                                hobby2: '無酒不歡🍺',
+                                money: '中',
+                                about: '關於我:<br>我菸酒真男人，黑白兩道尊稱羞桑<br>想當年一手球拍🏸，一手酒瓶🍾逍遙自在<br>浪流連遍全台灣，下次帶你玩🤙',
+                                cost:'160',
+                                days:'0'
+                        },{
+                                id:'7', 
+                                img: "./img/s7.jpg",
+                                name: '宣宣',
+                                age: '23',
+                                goal: '✨✨✨✨✨',
+                                location: 'Japan',
+                                height: '178cm',
+                                hobby1: '只抽電子菸',
+                                hobby2: '小酌',
+                                money: '可商議的',
+                                about: '關於我:<br>留日高材生，日系PlayBoy<br>恋愛生活を受け入れる 結婚生活を受け入れない 🕶',
+                                cost:'80',
+                                days:'0'
+                        }
+                        ]
+                    }           
+                },
+                methods:  {
+                    putIntoShop(name, age, cost, days,img) {
+                    if (days !== '') {
+                        const newItem = {
+                        itemName: name,
+                        itemAge: age,
+                        itemPrice: cost,
+                        itemDays: days,
+                        itemSrc: img
+                        };
+                        this.priceTotle += cost*days
+                        console.log(newItem)
+                        this.buylist.push(newItem)
+                        // this.allItem[index].itemNum = 0;
+                        }
+                    }
+                    },
+                    handleMouseOver() {
+                        this.hoverStyle.cursor = 'pointer';
+                    },
+                    handleMouseOut() {
+                        this.hoverStyle.cursor = 'default';
+                    },
+                    searchInput2() {
+                        if (this.searchInput === '') {
+                        return this.list;
+                    } else {
+                        const searchTerm = this.searchInput.toLowerCase();
+                        return this.list.filter(item => item.name.toLowerCase().includes(searchTerm));
+                    }
+
+                },
+                computed: {
+                    filteredList() {
+                        if (this.searchInput === '') {
+                            return this.list;
+                        } else {
+                            const searchTerm = this.searchInput.toLowerCase();
+                            return this.list.filter(item => item.name.toLowerCase().includes(searchTerm));
+                        }
+                    }
+                }
+
+                
+            
+            }).mount('#app');
+        </script>
+    </body>
+    </html>
+
+
+
