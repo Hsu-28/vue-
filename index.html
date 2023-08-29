@@ -40,7 +40,8 @@
                 margin-bottom: 20px;
             }
             .shopcar{
-                width: 28%;
+                max-height: 60vh;
+                overflow: auto;
             }
             #infoModal{
             
@@ -55,15 +56,16 @@
                 left: 0;
                 padding: 20px;
                 width: 100%;
-                height: 200vh;
+                height: 250vh;
                 background-color: rgba(0, 0, 0, 0.8);
+                z-index: 10;
             }
             .showContent{
                 position: absolute;
                 left: 50%;
-                top: 5vh;
+                top: 20vh;
                 width: 50%;
-                height: 90vh;
+                height: 180vh;
                 transform: translateX(-50%);
                 background-color: #fff;
                 overflow-y: auto;
@@ -76,7 +78,6 @@
                 display: flex;
                 border: 1px solid gray;
                 margin-bottom: 5px;
-
             }
             .shopcar-c > div:last-of-type{
                 margin-left: 10px;
@@ -90,6 +91,24 @@
                 text-align: center;
                 background-color: palevioletred;
             }
+            h1{
+                padding-left: 26px;
+            }
+            .searchbf{
+                margin-left: 26px;
+            }
+            .openBtn{
+                width: 100%;
+            }
+            .shopcarC{
+                width: 30%;
+                top: 80px;
+                position: fixed;
+                max-height: 90vh;
+                overflow: auto;
+                
+                right: 0; 
+            } 
         </style>
     </head>
     <body>
@@ -97,7 +116,10 @@
         <div id="app">
             <h1>租借男友</h1>
             <hr>
-            查詢男友:<input type="text" v-model="searchInput" >
+            <div class="searchbf">
+                查詢男友: &nbsp; <input type="text" v-model="searchInput" >
+            </div>
+        
             <div class="mainContenter">
             
                 <section class="cardContainer" id="">
@@ -106,7 +128,7 @@
                         <img :src="item.img" alt="">
                         <p>{{item.name}}, {{item.age}} </p>
                         <p>我的評分:<br>{{item.goal}}</p>    
-                        <button @click="item.showModal = true" class="hoverStyle" @mouseover="handleMouseOver" @mouseout="handleMouseOut">更多關於{{item.name}}❤️</button>
+                        <button @click="item.showModal = true" class="hoverStyle openBtn" @mouseover="handleMouseOver" @mouseout="handleMouseOut" >更多關於{{item.name}}❤️</button>
             
                         <div id="show" v-if="item.showModal"> 
                             <div class="showContent">
@@ -119,7 +141,7 @@
                                 <p>飲酒習慣：{{item.hobby2}}</p>
                                 <p>零用錢預算：{{item.money}}</p>
                                 <p v-html="item.about"> </p>
-                                <p >租借金額：{{item.cost}}/天</p>
+                                <p >租借金額：{{item.cost}} 塊/天</p>
                                 <label for="days" >租借天數：</label>
                                 <select id="days" v-model="item.days" value="list.count">
                                     <option value="1">1 天</option>
@@ -143,20 +165,29 @@
                     </div>  
                     
                 </section>
-                
-                <section class="shopcar">
+
+                <div  class="shopcarC">
                     <h2>我的租借人選</h2>
-                    <div v-for="item in buylist" :key="item.itemName" class="shopcar-c">
-                        <img :src="item.itemSrc" alt="" class="shopImg">    
-                        <div>
-                            <p>訂單{{item.index}}: {{item.itemName}},{{item.itemAge}}</p>
-                            <p>租借天數: {{item.itemDays}}</p>
-                            <p>租借單價:{{item.itemPrice}}</p>
-                        </div>               
-                    </div>
+                    <section class="shopcar">
+
+                    
+                        <div v-for="item in buylist" :key="item.itemName" class="shopcar-c">
+                            <img :src="item.itemSrc" alt="" class="shopImg">    
+                            <div>
+                                <p>訂單{{item.index}}: {{item.itemName}},{{item.itemAge}}</p>
+                                <p>租借天數: {{item.itemDays}}</p>
+                                <p>租借單價:{{item.itemPrice}}</p>
+                            </div>               
+                        </div>
+                       
+                        
+                    </section> 
+                    
                     <hr>
-                    <p>租借總金額:{{priceTotle}}</p>
-                </section> 
+                    <p class="totle">租借總金額:{{priceTotle}}</p>
+                </div>
+               
+               
             </div>
            
             
@@ -184,7 +215,7 @@
                             id:'1',
                             img: "./img/S0.jpg", 
                             name: '小偉',
-                            age: '20',
+                            age: '20歲',
                             goal: '✨✨✨✨✨',
                             location: 'Taiwan',
                             height: '175cm',
@@ -199,7 +230,7 @@
                                 id:'2', 
                                 img: "./img/s2.jpg",
                                 name: '嫻嫻',
-                                age: '22',
+                                age: '22歲',
                                 goal: '✨✨✨✨✨',
                                 location: 'Tainan',
                                 height: '173cm',
@@ -215,7 +246,7 @@
                                 id:'3', 
                                 img: "./img/S3.jpg",
                                 name: '阿極',
-                                age: '28',
+                                age: '28歲',
                                 goal: '✨✨✨✨✨',
                                 location: 'Tainan',
                                 height: '178cm',
@@ -228,9 +259,9 @@
                         },
                         {
                                 id:'4', 
-                                img: "./img/s40.jpg",
+                                img: "./img/s4.jpg",
                                 name: 'Daniel 蜓',
-                                age: '31',
+                                age: '31歲',
                                 goal: '✨✨✨✨✨',
                                 location: 'Taipei',
                                 height: '182cm',
@@ -245,7 +276,7 @@
                                 id:'5', 
                                 img: "./img/s5.jpg",
                                 name: '義哥',
-                                age: '30',
+                                age: '30歲',
                                 goal: '✨✨✨✨✨',
                                 location: 'Taichung',
                                 height: '177cm',
@@ -260,7 +291,7 @@
                                 id:'6', 
                                 img: "./img/s6.jpg",
                                 name: '羞桑',
-                                age: '18',
+                                age: '18歲',
                                 goal: '✨✨✨✨✨',
                                 location: 'Taichung',
                                 height: '177cm',
@@ -274,7 +305,7 @@
                                 id:'7', 
                                 img: "./img/s7.jpg",
                                 name: '宣宣',
-                                age: '23',
+                                age: '23歲',
                                 goal: '✨✨✨✨✨',
                                 location: 'Japan',
                                 height: '178cm',
@@ -283,6 +314,105 @@
                                 money: '可商議的',
                                 about: '關於我:<br>留日高材生，日系PlayBoy<br>恋愛生活を受け入れる 結婚生活を受け入れない 🕶',
                                 cost:'80',
+                                days:'0'
+                        },
+                        {
+                                id:'8', 
+                                img: "./img/s8.jpg",
+                                name: '食慾',
+                                age: '38歲',
+                                goal: '✨✨✨✨✨',
+                                location: 'Taoyuan',
+                                height: '163cm',
+                                hobby1: '不抽菸',
+                                hobby2: '一杯醉',
+                                money: '可商議的',
+                                about: '關於我:<br>可以叫我許食玉子燒🥚，食慾祝你有好的食慾🍗<br>但是如果你喜歡吃小黃瓜的話，那我會收回我的祝福💔',
+                                cost:'80',
+                                days:'0'
+                        },{
+                                id:'9', 
+                                img: "./img/s9.jpg",
+                                name: '小猿',
+                                age: '22歲',
+                                goal: '✨✨✨✨✨',
+                                location: 'Africa',
+                                height: '200cm',
+                                hobby1: '只抽自己捲的',
+                                hobby2: '飲酒如水',
+                                money: '低',
+                                about: '關於我:<br>YOU CAN&apos;T SEE ME<br>可以叫我猿猿🙊，重訓三十年經驗🏋️，一拳就是一個西瓜<br>苦練健身多年，是為了打破你的心牆❤️',
+                                cost:'70',
+                                days:'0'
+                        },{
+                                id:'10', 
+                                img: "./img/s10.jpg",
+                                name: '羊羊',
+                                age: '17歲',
+                                goal: '✨✨✨✨✨',
+                                location: 'Taipei',
+                                height: '178cm',
+                                hobby1: '只抽雪茄',
+                                hobby2: '只喝社交酒',
+                                money: '極高',
+                                about: '關於我:<br>頂大高材生，台灣劇場新星<br>"劇場已經沒有挑戰性了，我是來征服前端這個區塊的"',
+                                cost:'1000',
+                                days:'0'
+                        },{
+                                id:'11', 
+                                img: "./img/s8.jpg",
+                                name: '順哥',
+                                age: '33歲',
+                                goal: '✨✨✨✨✨',
+                                location: 'Taipei',
+                                height: '179cm',
+                                hobby1: '只抽社交菸',
+                                hobby2: '只喝社交酒',
+                                money: '可商議的',
+                                about: '關於我:<br>人狠話不多，社會你順哥🔨<br>我瘋起來，連我自己都會怕⚰️',
+                                cost:'44',
+                                days:'0'
+                        },{
+                                id:'12', 
+                                img: "./img/s8.jpg",
+                                name: '陽桑',
+                                age: '37歲',
+                                goal: '✨✨✨✨✨',
+                                location: 'Taipei',
+                                height: '172cm',
+                                hobby1: '白長壽',
+                                hobby2: '只喝40%以上，40%以下是水吧👎',
+                                money: '可商議的',
+                                about: '關於我:<br>我上課都不偷聊天的🤓<br>，只是一說話就被抓到，一起沉醉在我富有磁性的聲音中吧👂',
+                                cost:'69',
+                                days:'0'
+                        },{
+                                id:'13', 
+                                img: "./img/s8.jpg",
+                                name: '小腹',
+                                age: '20歲',
+                                goal: '✨✨✨✨✨',
+                                location: 'Taipei',
+                                height: '174cm',
+                                hobby1: '每天戒菸',
+                                hobby2: '小酌',
+                                money: '高',
+                                about: '關於我:<br>將植物加到水中是茶<br> 放入咖啡豆的水是茶，落葉飄進的水溝也是茶<br>我想泡的不是茶，是你',
+                                cost:'87',
+                                days:'0'
+                        },{
+                                id:'14', 
+                                img: "./img/s8.jpg",
+                                name: '阿蜆',
+                                age: '33歲',
+                                goal: '✨✨✨✨✨',
+                                location: 'Taipei',
+                                height: '179cm',
+                                hobby1: '只抽社交菸',
+                                hobby2: '只喝社交酒',
+                                money: '',
+                                about: '關於我:<br>',
+                                cost:'44',
                                 days:'0'
                         }
                         ]
