@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
+        <script src="https://kit.fontawesome.com/8bfd57d05d.js" crossorigin="anonymous"></script>
         <style>
             .mainContenter{
                 display: flex;
@@ -14,6 +15,7 @@
             }
             html{
                 background-color: pink;
+                font-size: 16px;
             }
             .cardContainer{
                 width: 70%;
@@ -40,7 +42,7 @@
                 margin-bottom: 20px;
             }
             .shopcar{
-                max-height: 60vh;
+                max-height: 56vh;
                 overflow: auto;
             }
             #infoModal{
@@ -56,7 +58,7 @@
                 left: 0;
                 padding: 20px;
                 width: 100%;
-                height: 250vh;
+                height: 1420px;
                 background-color: rgba(0, 0, 0, 0.8);
                 z-index: 10;
             }
@@ -72,12 +74,14 @@
                 padding: 20px;
             }
             .shopImg{
-                width: 150px;
+                width: 160px;
+                
             }
             .shopcar-c{
                 display: flex;
                 border: 1px solid gray;
                 margin-bottom: 5px;
+                position: relative;
             }
             .shopcar-c > div:last-of-type{
                 margin-left: 10px;
@@ -86,13 +90,24 @@
                 cursor: pointer;
             }
             footer{
-                margin-top: 50px;
+                margin-top: 70px;
                 padding: auto;
                 text-align: center;
                 background-color: palevioletred;
+                position: absolute;
+                margin-bottom: 10px;
+                width: 100%;
             }
             h1{
                 padding-left: 26px;
+            }
+            h1::after{
+                position:absolute;
+                width: 100px;
+                top: 40px;
+                left: 30px;
+                content: "";
+                border:1.5px solid black;
             }
             .searchbf{
                 margin-left: 26px;
@@ -101,20 +116,120 @@
                 width: 100%;
             }
             .shopcarC{
-                width: 30%;
+                width: 28%;
                 top: 80px;
                 position: fixed;
                 max-height: 90vh;
-                overflow: auto;
-                
-                right: 0; 
+                right: 10px; 
+            }
+            .delet{
+                margin-left: 60%;
+                color: rgb(79, 79, 79);
+                margin-top: -36px;
             } 
+            .deletX{
+                position: absolute;
+                right: 16px;
+                top: -10px;
+            }
+            .check{
+                position: absolute;
+                background-color: #fff;
+                top: 20px;
+                left: 140px;
+            }
+            .ageCheck{
+                font-size: 140px;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                background-color: rgba(60, 60, 60, 0.99);
+                width: 110%;
+                height: 450%;
+                z-index: 2;
+                transform: translate(-50%,-50%);
+            }
+            .ageCheck div:first-of-type{
+                position: absolute;
+                left: 50%;
+                top: 46%;
+                transform: translate(-50%,-50%);
+            }
+            .check1,
+            .check2{
+                background-color: #fff;
+                position: absolute;
+                
+                top: 46%;
+                transform: translate(-50%,-50%);
+                font-size: 28px;
+                border-radius: 16px;
+                padding: 10px;
+                top: 51%;
+                color: white;
+            }
+            .check1{
+                left: 39%;
+                background-color: rgba(0, 128, 0, 0.836);
+            }
+            .check1:hover{
+                cursor: pointer;
+            }
+            .check2{
+                left: 59%;
+                background-color: rgb(205, 0, 0);
+            }
+            .check2 a{
+                color: white;
+                text-decoration: none;
+            }
+            .first{
+                font-size: 20px;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                background-color: rgb(255, 255, 255);
+                width: 110%;
+                height: 450%;
+                z-index: 200;
+                transform: translate(-50%,-50%);
+            }
+            .first i{
+                position: absolute;
+                left: 50%;
+                top: 46%;
+                transform: translate(-50%,-50%);
+                font-size: 120px;
+            }
+            .first div{
+                position: absolute;
+                left: 50%;
+                top: 52%;
+                transform: translate(-50%,-50%);
+                font-size: 16px;
+                width: 500px;
+            }
+
+
         </style>
     </head>
     <body>
 
         <div id="app">
-            <h1>租借男友</h1>
+            <div class="first" id="firstS" v-show="showFirstS">
+                <p><i class="fa-solid fa-triangle-exclamation" style="color: #f3c930;"></i>
+                    <br> 外部網站
+                </p>
+                <div>您點選的連結會帶您離開https://github.com，並重新導向第三方網站。GitHub不代表第三方網站，對其內容，安全性不承擔任何監督或控管的義務，如果您信任該網站並進行跳轉，GitHub不負任何責任。</div>
+               
+                
+            </div>
+            <div class="ageCheck" v-show=" ageCheck" @click="ageCheck = false"> 
+                <div>🔞</div>
+                <div class="check1">確認已滿18歲</div>
+                <div class="check2"> <a href="https://www.youtube.com/watch?v=XqZsoesa55w">未滿18歲</a> </div>  
+            </div>
+            <h1>包一ㄤ &nbsp; 租借男友</h1>
             <hr>
             <div class="searchbf">
                 查詢男友: &nbsp; <input type="text" v-model="searchInput" >
@@ -155,7 +270,7 @@
                                     <option value="9">9 天</option>
                                 </select>
                                 <br>
-                                <button id="buy" @click="putIntoShop(item.name,item.age,item.cost,item.days,item.img)" class="hoverStyle" @mouseover="handleMouseOver" @mouseout="handleMouseOut">確定租借</button>  
+                                <button id="buy" @click="putIntoShop(item.name,item.age,item.cost,item.days,item.img); item.showModal = false"   class="hoverStyle" @mouseover="handleMouseOver" @mouseout="handleMouseOut">確定租借</button>  
                                 <button id="close" @click="item.showModal = false" class="hoverStyle" @mouseover="handleMouseOver" @mouseout="handleMouseOut">close</button>
                             </div>
                         </div>
@@ -174,17 +289,22 @@
                         <div v-for="item in buylist" :key="item.itemName" class="shopcar-c">
                             <img :src="item.itemSrc" alt="" class="shopImg">    
                             <div>
-                                <p>訂單{{item.index}}: {{item.itemName}},{{item.itemAge}}</p>
+                                <p>訂單{{item.id}}: {{item.itemName}},{{item.itemAge}}</p>
                                 <p>租借天數: {{item.itemDays}}</p>
                                 <p>租借單價:{{item.itemPrice}}</p>
+                               <!-- <p class="deletX hoverStyle"  @mouseover="handleMouseOver2" @mouseout="handleMouseOut2" @click="removeItem(index)"> 
+                                    x
+                                     <div class="check" v-show="showCheck">
+                                        真的不要{{item.itemName}}了嗎😭
+                                    </div> 
+                                </p>-->
                             </div>               
                         </div>
                        
-                        
+                        <hr>
                     </section> 
-                    
-                    <hr>
-                    <p class="totle">租借總金額:{{priceTotle}}</p>
+                    <p class="totle">租借總金額:{{priceTotle}} 元</p>
+                    <p class="delet hoverStyle " @mouseover="handleMouseOver2" @mouseout="handleMouseOut"  @click="buylist = []; priceTotle = 0">我不要他們了</p>
                 </div>
                
                
@@ -200,10 +320,12 @@
             const app = Vue.createApp({
                 data() {
                     return {
+                        showFirstS: true,
                         showModal: false,
                         priceTotle: 0,
                         searchInput: '',
-                        // newlist:'',
+                        showCheck: false,
+                        ageCheck: true,
                         hoverStyle:{
                             cursor: 'default'
                         },
@@ -341,7 +463,7 @@
                                 hobby1: '只抽自己捲的',
                                 hobby2: '飲酒如水',
                                 money: '低',
-                                about: '關於我:<br>YOU CAN&apos;T SEE ME<br>可以叫我猿猿🙊，重訓三十年經驗🏋️，一拳就是一個西瓜<br>苦練健身多年，是為了打破你的心牆❤️',
+                                about: '關於我:<br>YOU CAN&apos;T SEE ME<br>可以叫我猿猿🙊，重訓三十年經驗🏋️，一拳就是一個西瓜<br>我苦練健身多年，就為了打破你的心牆❤️',
                                 cost:'70',
                                 days:'0'
                         },{
@@ -356,7 +478,7 @@
                                 hobby2: '只喝社交酒',
                                 money: '極高',
                                 about: '關於我:<br>頂大高材生，台灣劇場新星<br>"劇場已經沒有挑戰性了，我是來征服前端這個區塊的"',
-                                cost:'1000',
+                                cost:'200',
                                 days:'0'
                         },{
                                 id:'11', 
@@ -375,7 +497,7 @@
                         },{
                                 id:'12', 
                                 img: "./img/s8.jpg",
-                                name: '陽桑',
+                                name: '洋伯',
                                 age: '37歲',
                                 goal: '✨✨✨✨✨',
                                 location: 'Taipei',
@@ -383,7 +505,7 @@
                                 hobby1: '白長壽',
                                 hobby2: '只喝40%以上，40%以下是水吧👎',
                                 money: '可商議的',
-                                about: '關於我:<br>我上課都不偷聊天的🤓<br>，只是一說話就被抓到，一起沉醉在我富有磁性的聲音中吧👂',
+                                about: '關於我:<br>我上課都不偷聊天的🤓<br>只是一說話就被抓到，一起沉醉在我富有磁性的聲音中吧👂',
                                 cost:'69',
                                 days:'0'
                         },{
@@ -397,7 +519,7 @@
                                 hobby1: '每天戒菸',
                                 hobby2: '小酌',
                                 money: '高',
-                                about: '關於我:<br>將植物加到水中是茶<br> 放入咖啡豆的水是茶，落葉飄進的水溝也是茶<br>我想泡的不是茶，是你',
+                                about: '關於我:<br>將植物加到水中是茶🍵<br> 放入咖啡豆的水是茶☕，落葉飄進的水溝也是茶💧<br>我想泡的不是茶，是你',
                                 cost:'87',
                                 days:'0'
                         },{
@@ -411,44 +533,57 @@
                                 hobby1: '只抽社交菸',
                                 hobby2: '只喝社交酒',
                                 money: '',
-                                about: '關於我:<br>',
-                                cost:'44',
+                                about: '關於我:我蜆哥大船長🚢<br>只是不說話而已，我都專心灑網<br>我養的魚跟你寫程式的bug一樣多🐟<br>我的魚池又大又深🤿，歡迎糾團來觀光😚',
+                                cost:'66',
                                 days:'0'
                         }
                         ]
                     }           
                 },
-                methods:  {
-                    putIntoShop(name, age, cost, days,img) {
-                    if (days !== '') {
+                methods: {
+                    putIntoShop(name, age, cost, days, img) {
+                        if (days !== "0" && days !== "") {
                         const newItem = {
-                        itemName: name,
-                        itemAge: age,
-                        itemPrice: cost,
-                        itemDays: days,
-                        itemSrc: img
+                            itemName: name,
+                            itemAge: age,
+                            itemPrice: cost,
+                            itemDays: days,
+                            itemSrc: img
                         };
-                        this.priceTotle += cost*days
-                        console.log(newItem)
-                        this.buylist.push(newItem)
-                        // this.allItem[index].itemNum = 0;
+                        this.priceTotle += cost * days;
+                        console.log(newItem);
+                        this.buylist.push(newItem);
                         }
-                    }
                     },
                     handleMouseOver() {
-                        this.hoverStyle.cursor = 'pointer';
+                        this.hoverStyle.cursor = "pointer";
                     },
                     handleMouseOut() {
-                        this.hoverStyle.cursor = 'default';
+                        this.hoverStyle.cursor = "default";
                     },
                     searchInput2() {
-                        if (this.searchInput === '') {
+                        if (this.searchInput === "") {
                         return this.list;
-                    } else {
+                        } else {
                         const searchTerm = this.searchInput.toLowerCase();
-                        return this.list.filter(item => item.name.toLowerCase().includes(searchTerm));
+                        return this.list.filter(
+                            (item) => item.name.toLowerCase().includes(searchTerm)
+                        );
+                        }
+                    },
+                    handleMouseOver2() {
+                        this.showCheck = true;
+                    },
+                    handleMouseOut2() {
+                        this.showCheck = false;
+                    },
+                    closeModal(item) {
+                        item.showModal = false;
+                    },
+                    deleteAll() {
+                        this.buylist = [];
+                        this.priceTotle = 0; // Added to reset the total price
                     }
-
                 },
                 computed: {
                     filteredList() {
@@ -459,6 +594,11 @@
                             return this.list.filter(item => item.name.toLowerCase().includes(searchTerm));
                         }
                     }
+                },
+                mounted(){
+                    setTimeout(() =>{
+                        this.showFirstS = false;
+                    }, 5000);
                 }
 
                 
